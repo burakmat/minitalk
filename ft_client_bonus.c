@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmat <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/05 18:22:20 by bmat              #+#    #+#             */
-/*   Updated: 2022/07/05 19:10:29 by bmat             ###   ########.fr       */
+/*   Created: 2022/07/01 06:59:40 by bmat              #+#    #+#             */
+/*   Updated: 2022/07/05 17:50:42 by bmat             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,39 @@ void	send_signals(int pid, char *str)
 	}
 }
 
+void	send_null(int pid)
+{
+	int	i;
+
+	i = 0;
+	while (i++ < 8)
+	{
+		kill(pid, SIGUSR2);
+		usleep(50);
+	}
+}
+
+void	send_pid(int target_pid)
+{
+	char	*self_pid;
+
+	self_pid = ft_itoa(getpid());
+	send_signals(target_pid, self_pid);
+	send_null(target_pid);
+	free(self_pid);
+}
+
+void	verification(int sig)
+{
+	if (sig == SIGUSR1)
+		ft_printf("Message has been received by the server.\n");
+}
+
 int	main(int ac, char **av)
 {
 	int	target_pid;
 
+	signal(SIGUSR1, verification);
 	target_pid = ft_atoi(av[1]);
 	if (ac == 3)
 	{
@@ -47,6 +76,8 @@ int	main(int ac, char **av)
 			write(1, "You should not give '-1' as a pid.\n", 35);
 			return (0);
 		}
+		send_pid(target_pid);
 		send_signals(target_pid, av[2]);
+		send_null(target_pid);
 	}
 }
