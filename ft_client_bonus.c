@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_client.c                                        :+:      :+:    :+:   */
+/*   ft_client_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmat <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 06:59:40 by bmat              #+#    #+#             */
-/*   Updated: 2022/07/05 17:50:42 by bmat             ###   ########.fr       */
+/*   Updated: 2022/07/07 15:19:14 by bmat             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,11 @@ int	main(int ac, char **av)
 			write(1, "You should not give '-1' as a pid.\n", 35);
 			return (0);
 		}
-		send_pid(target_pid);
-		send_signals(target_pid, av[2]);
-		send_null(target_pid);
+		if (*av[2])
+		{	
+			send_pid(target_pid);
+			send_signals(target_pid, av[2]);
+			send_null(target_pid);
+		}
 	}
 }
